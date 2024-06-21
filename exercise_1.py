@@ -111,3 +111,65 @@ def locate_card(cards, query):
     return -1
 
 evaluate_test_case(locate_card, test)
+
+# Question: Given an array of integers nums sorted in ascending order, find the starting and ending position of a given number.
+
+test = {
+    'input': {
+        'nums': [1,2,5,6,8,11,11,11,12,13,13],
+        'query': 11
+    },
+    'output':
+    [5,7]
+}
+
+def evaluate_last_position(nums,query,mid):
+    if nums[mid] == query:
+        if (mid + 1) <= len(nums) - 1 and nums[mid+1] == query:
+            return 'right'
+        else:
+            return 'found'
+    elif nums[mid] > query:
+        return 'left'
+    else:
+        return 'right'    
+
+
+def evaluate_first_position(nums,query,mid):
+    if nums[mid] == query:
+        # note: in python if the first condition in an and statement is false, the entire if condition is false, and the second part is never executed, avoiding potential errors.
+        # note 2: the sme goes for or statements if the first condition is true       
+        if (mid - 1) >= 0 and nums[mid-1] == query:
+            return 'left'
+        else:
+            return 'found'
+    elif nums[mid] > query:
+        return 'left'
+    else:
+        return 'right'            
+
+def binomial_search(nums, query, evaluate):
+    high = len(nums) - 1
+    low = 0
+    try:
+        while low <= high:
+            mid = (high + low)//2
+            result = evaluate(nums,query,mid)
+
+            if result == 'found':
+                return mid
+            elif result == 'left':
+                high = mid - 1
+            else:
+                low = mid + 1  
+        return -1          
+    except:
+        return -1
+
+def first_and_last_position(nums,query):
+        edges = []
+        edges.append(binomial_search(nums,query, evaluate_first_position))
+        edges.append(binomial_search(nums,query, evaluate_last_position))
+        return edges
+
+evaluate_test_case(first_and_last_position, test)
